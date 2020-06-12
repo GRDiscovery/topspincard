@@ -1,7 +1,8 @@
-import React, { Component, useState } from 'react';
-import { StyleSheet, TextInput, Alert, View, SafeAreaView, Image, ScrollView, AsyncStorage, Linking, Vibration, Platform, Switch } from 'react-native'
-import { TextInputMask } from 'react-native-masked-text';
+import React, { Component } from 'react';
+import { StyleSheet, TextInput, Alert, View, SafeAreaView, Image, ScrollView, AsyncStorage, Vibration, Platform, Switch } from 'react-native'
 import { Notifications } from 'expo';
+import { TextInputMask } from 'react-native-masked-text'
+
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 //import * as WebBrowser from 'expo-web-browser';
@@ -20,11 +21,26 @@ export default class Login extends Component {
     expoPushToken : '',
     notification: {},
     isReady: false,
-    lembreme: false,
-    
-  };
+    switchValue: false,
+   
+};
 
- 
+
+_handleTongleSw = () => {
+
+  this.setState(state => ({
+    switchValue: !state.switchValue
+    
+  }));
+
+ if(this.state.switchValue == false){
+
+  console.log('dados Salvos');
+ }else{
+  console.log('Dados eliminados');
+ }
+
+}
    
   
 
@@ -183,17 +199,7 @@ console.log(this.state.lembreme);
       });
   }
 
-  toggleSwitch(){
 
-  
-
-    // this.setState(state => ({
-    //   lembreme: !state.lembreme
-      
-    // }));
-
-  }
-  
 
 
   render() {
@@ -215,26 +221,49 @@ console.log(this.state.lembreme);
           justifyContent: 'center',
           alignItems: 'center',
           color: '#FFF',
+          flex: 1,
           
         }}>
         
           <Image
-            style={{ height: 200, width: 500, marginTop:-30}}
+            style={{ height: 300, width: 300, marginTop:-30}}
             source={require('../../assets/img/L512.png')}
             resizeMode="contain"
           />
         </View>
 
-        <Text style={{textAlign:'center' , color: '#646463', marginTop:-30}}>Acesse sua conta digital </Text> 
+        <Text style={{textAlign:'center' , color: '#646463', marginTop:-50, fontSize:20}}>Acesse sua conta digital </Text> 
         <Form>
-          <Item regular style={{ marginLeft: 15, marginRight: 15, borderRadius:10, marginTop:40, backgroundColor:'#FFF' }}>
+          
+          <Item regular style={{ marginLeft: 30, marginRight: 30, borderRadius:10, marginTop:40, backgroundColor:'#FFF' }}>
+
+<TextInputMask style={{backgroundColor:"#ff0000", width:"100%", backgroundColor:'#FFF', color: '#646464', fontSize:22  }}
+  type={'credit-card'}
+  options={{
+    obfuscated: false,
+    
+  }}
+  
+  value={this.state.creditCard}
+  onChangeText={text => {
+    this.setState({
+      creditCard: text
+    })
+  }}
+  placeholder="Número do cartão" 
+/>
+
             <Input onChangeText={numcard => this.setState({ numcard })}
               value={this.state.numcard} autoCapitalize="none" keyboardType='number-pad' style={{ color: '#646464' }} stackedLabel picker placeholder="Número do cartão" placeholderTextColor='#646464' />
           </Item>
 
-          <Item regular style={{ marginLeft: 15, marginRight: 15, marginTop: 50, borderRadius:10, backgroundColor:'#FFF'  }}>
+ 
+
+          <Item regular style={{ marginLeft: 30, marginRight: 30, marginTop: 50, borderRadius:10, backgroundColor:'#FFF'  }}>
             <Input onChangeText={senha => this.setState({ senha })}
               value={this.state.senha} autoCapitalize="none"  secureTextEntry keyboardType='default' style={{ color: '#646464' }} stackedLabel picker placeholder="Senha" placeholderTextColor='#646464' />
+
+
           </Item>
         </Form>
 
@@ -242,14 +271,12 @@ console.log(this.state.lembreme);
         <Content>
 
         <Grid>
-          <Col style={{ marginTop: 30, marginLeft:20}}>
-          <Text style={{color: '#646464'}} > Lembrar de mim</Text>
+          <Col style={{ marginTop: 30, marginLeft:30}}>
+          <Text style={{color: '#646464',}} > Lembrar de mim</Text>
           <Switch
-        // trackColor={{ false: "#767577", true: "#81b0ff" }}
-        // thumbColor={true ? "#f5dd4b" : "#f4f3f4"}
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={this.toggleSwitch}
-        value={this.lembreme}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={this._handleTongleSw}
+          value={this.state.switchValue}
        
         />            
       </Col>
@@ -257,7 +284,7 @@ console.log(this.state.lembreme);
           <Button onPress={numcard => this.onPress()} style={{ marginTop: 30, marginLeft: 30, marginRight: 30, borderRadius: 10, backgroundColor: '#646464' }} full rounded>
             <Text style={{ color: '#FFF' }}>Acessar</Text>
           </Button>
-
+    
 
           </Col>
         </Grid>
